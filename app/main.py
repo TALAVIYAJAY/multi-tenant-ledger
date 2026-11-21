@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime
 from typing import List, Optional
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, status
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
 from app.db import get_db, init_db
@@ -51,6 +52,12 @@ def get_current_firm(
             detail="Header 'X-Firm-ID' must not be empty",
         )
     return firm_id
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    """Redirect root to Swagger UI docs."""
+    return RedirectResponse(url="/docs")
 
 
 @app.get("/health", tags=["System"])
